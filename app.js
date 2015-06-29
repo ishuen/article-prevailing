@@ -14,13 +14,14 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.get('/', function(req, res){
+/*app.get('/', function(req, res){
 	res.render('index',{title:'index page'})	
 });
 
 app.get('/about', function(req, res){
 	res.render('about',{title:'about us page'})	
-});
+});*/
+routes(app);
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));

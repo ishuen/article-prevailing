@@ -1,9 +1,17 @@
+    <div id="fb-root"></div>
     <script>
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : '965956846748225',
+          appId      : '988221634521746',
           xfbml      : true,
+          status     : true,
           version    : 'v2.3'
+        });
+        FB.Event.subscribe('auth.login', function(response) {
+                window.location.reload();
+        });
+        FB.Event.subscribe('auth.logout', function(response) {
+                window.location.reload();
         });
       };
 
