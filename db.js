@@ -2,9 +2,10 @@ var mongoose = require('mongoose');
 var express = require('express');
 
 var db = mongoose.connection;
+console.log('about to connect mongodb');
 mongoose.connect('mongodb://improject:im12345@ds041831.mongolab.com:41831/improject_database');
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
+db.once('open', function callback() {
   console.log('success connect');
 });
 
@@ -15,3 +16,4 @@ process.on('SIGINT', function() {
     process.exit(0);
   });
 });
+
