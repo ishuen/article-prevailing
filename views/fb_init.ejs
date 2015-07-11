@@ -8,18 +8,57 @@
           version    : 'v2.3'
         });
         FB.Event.subscribe('auth.login', function(response) {
+                userID = response.authResponse.userID;
+                accToken = response.authResponse.accessToken;
+                console.log('userID:'+userID);
+                console.log('accessToken:'+accToken);
+                var loginTime = new Date().getTime();
+                console.log('loginTime:'+loginTime);
                 window.location.reload();
         });
         FB.Event.subscribe('auth.logout', function(response) {
+                var logoutTime = new Date().getTime();
+                console.log('logoutTime:'+logoutTime);
+                console.log(JSON.stringify(response));
                 window.location.reload();
         });
+        FB.Event.subscribe('auth.authResponseChange', function(response) {
+                console.log('authResChange:');
+                console.log(JSON.stringify(response));
+        });
+        FB.Event.subscribe('auth.statusChange', function(response) {
+                console.log('authStaChange:');
+                console.log(JSON.stringify(response));
+        });
+        FB.Event.subscribe('edge.create', function(response) {
+                var time = new Date().getTime();
+                console.log('time for like:'+time);
+        });
+        FB.Event.subscribe('edge.remove', function(href) {
+                var time = new Date().getTime();
+                console.log('time for unlike:'+time);
+        });
+        FB.Event.subscribe('message.send', function(url) {
+                var time = new Date().getTime();
+                console.log('time for share:'+time);
+        });
+
       };
 
-      (function(d, s, id){
+      /*(function(d, s, id){
          var js, fjs = d.getElementsByTagName(s)[0];
          if (d.getElementById(id)) {return;}
          js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
+         js.src = "http://connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
+       }(document, 'script', 'facebook-jssdk'));*/
+
+       (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.4&appId=965956846748225";
+          fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));</script>
+
     </script>

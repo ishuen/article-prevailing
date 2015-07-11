@@ -1,9 +1,11 @@
+var http = require('http');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var FB = require('fb');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -32,6 +34,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+FB.api('oauth/access_token', {
+    client_id: '988221634521746',
+    client_secret: '43410f2496997176bf4a69ccba1245ff',
+    grant_type: 'client_credentials'
+}, function (res) {
+    if(!res || res.error) {
+        console.log(!res ? 'error occurred' : res.error);
+        return;
+    }
+
+    var accessToken = res.access_token;
+    console.log('accessToken:'+accessToken);
+});
 
 app.use('/', routes);
 app.use('/users', users);
@@ -66,6 +82,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
