@@ -1,0 +1,13 @@
+#sidebar.sidebar
+  div(data-scrollbar='true', data-height='100%')
+    ul.nav
+      li.nav-header 文章分類
+      li(ng-class="{'has-child':haschild(menu), 'expand':menu.open}" ng-repeat="menu in sidemenu")
+        a(href='javascript:;' ng-click="togglemenu(menu)")
+          b.caret.pull-right(ng-if="haschild(menu)")
+          i.fa.fa-laptop
+          span {{menu.title}}
+        ul.sub-menu(ng-if="haschild(menu)" collapse="!menu.open")
+          li(ng-repeat="smenu in menu.children")
+            a(ui-sref="{{menu.key+'-'+smenu.key}}") {{smenu.title}}
+.sidebar-bg

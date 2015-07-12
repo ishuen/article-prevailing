@@ -1,8 +1,30 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+a:link, a:active{
+	outline:none;
+}
+select{
+	outline:none;
+}
+.tiny_button{
+	height:16px;
+}
+.tiny_button span{
+	display:block;
+	line-height:12.5px;
 }
 
-a {
-  color: #00B7FF;
+.system_form_title, label{
+	font-weight:bold;
 }
+
+.menu-open{
+	display:block !important;
+}
+.test{
+	background:white;
+}
+#test{
+	width:100px;
+	height:100px;
+	background:black;
+}
+

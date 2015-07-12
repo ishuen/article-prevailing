@@ -1,0 +1,67 @@
+{
+    "system_info": {
+        "system_list": {
+            "name": "rtn16",
+            "model": "Asus RT-N16",
+            "cputype": "Broadcom BCM4716 chip rev 1 pkg 10",
+            "cputime": "480MHz",
+            "flashcapacity": "32MB",
+            "currenttime": "Mon, 29 Jun 2015 14:47:10 +0800",
+            "boottime": "0 days, 01:41:47",
+            "cpuload": "0.00 / 0.00 / 0.00",
+            "ram": "123.87 MB / 108.64 MB (87.70%)",
+            "nvram": "32.00 KB / 9420 (28.75%)"
+        },
+        "wan_list": {
+            "mac": "20:CF:30:C6:4E:4C",
+            "type": "PPPoE",
+            "ip": "220.133.106.153",
+            "mask": "255.255.255.255",
+            "gate": "168.95.98.254",
+            "dns": "8.8.8.8:53",
+            "mtu": "1492",
+            "status": "Connected",
+            "connecttime": "0 days, 00:03:21"
+        },
+        "lan_list": {
+            "mac": "20:CF:30:C6:4E:4B",
+            "ip": "br0 (LAN) - 192.168.16.254/24",
+            "dhcp": "br0 (LAN) - 192.168.16.150 - 192.168.16.200"
+        },
+        "wlan_list": {
+            "mac": "20:CF:30:C6:4E:4D",
+            "workmode": "Access Point",
+            "netmode": "Auto",
+            "status": "Up (LAN)",
+            "wave": "關閉",
+            "ssid": "Intrising",
+            "broadcast": "啟用",
+            "privacy": "WPA2 Personal (PSK) + TKIP / AES",
+            "channel": "8 - 2.447 GHz",
+            "bandwidth": "20 MHz",
+            "rate": ""
+        }
+    },
+    "device_info": [
+        {
+            "interface": "br0",
+            "mac": "C8:E0:EB:5A:E5:25",
+            "ip": "192.168.16.111",
+            "device": "timac",
+            "intensity": "",
+            "quality": "",
+            "rate": "",
+            "rent": ""
+        },
+        {
+            "interface": "br0",
+            "mac": "C8:E0:EB:5A:E5:25",
+            "ip": "192.168.16.111",
+            "device": "Intrising",
+            "intensity": "",
+            "quality": "",
+            "rate": "",
+            "rent": ""
+        }
+    ]
+}
