@@ -199,7 +199,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     FB.ui(
       {
         method: 'share',
-        href: 'www.google.com'
+        href: 'https://nuvnzuqxpe.localtunnel.me'
         //href: $window.location.href
       },
       function(response) {
