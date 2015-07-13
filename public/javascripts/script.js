@@ -100,7 +100,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     }
     item.open=!item.open;
   };
-
+  $scope.notlog=true;
   $scope.url = 'http://localhost:8000';
   $scope.login=function(event_type){
     var userid, username=0;
@@ -204,8 +204,10 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
       },
       function(response) {
         //console.log('inshare');
-        if (response && !response.error_code) 
+        if (response && !response.error_code){
+          console.log('response',response);
           $scope.checkLogin('share');     
+        }
       }
     );
   };
@@ -216,11 +218,13 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   }; 
   $scope.logout=function(){
     FB.logout(function(response) {
-      // user is now logged out
+      
     });
   }
-  
-  //$scope.checkLogin('login');
+  $scope.logged=function(){
+    $scope.notlog=false;
+  }
 
+  //$scope.login();
 
 });

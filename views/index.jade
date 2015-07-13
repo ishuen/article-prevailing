@@ -10,6 +10,7 @@ html(lang='en')
     link(href='/public/stylesheets/colorbootstrap/bootstrap.min.css', rel='stylesheet')
     link(href='/public/stylesheets/colorbootstrap/animate.css', rel='stylesheet')
     link(href='/public/stylesheets/colorbootstrap/style.css', rel='stylesheet')
+    link(href='/public/stylesheets/mystyle.css', rel='stylesheet')
     link(href='/public/stylesheets/colorbootstrap/style-responsive.css', rel='stylesheet')
     link(href='/public/stylesheets/font-awesome/css/font-awesome.css', rel='stylesheet')
     script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js')
@@ -17,17 +18,16 @@ html(lang='en')
     script(src='https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js')
     script(src='/public/javascripts/script.js')
   body(ng-app='graphui',ng-controller='graphuiCtrl')
-    div(ng-include="'views/header.html'")
-    div(ng-include="'views/sidebar.html'")
-    #content.content
-      ol.breadcrumb.pull-right
-        li
-          a(href='javascript:;') Home
-        li.active Calendar
-      h1.page-header
-        | Calendar 
-        small header small text goes here...
-      //-div(ng-include="'views/content.html'")
+    div(ng-include="'views/header.html'",ng-class="{'notlog':notlog}")
+    div(ng-include="'views/sidebar.html'",ng-class="{'notlog':notlog}")
+    .panel.panel-inverse#login(ng-if="notlog")
+      .panel-heading
+        .panel-heading-btn
+        h4.panel-title 請先登入
+      .panel-body
+        .col-md-2
+          a(href='javascript:;' ng-click='checkLogin();logged()') Login
+    #content.content(ng-class="{'notlog':notlog}")
       #fb-root
       script.
         window.fbAsyncInit = function() {
@@ -44,4 +44,13 @@ html(lang='en')
            js.src = "//connect.facebook.net/en_US/sdk.js";
            fjs.parentNode.insertBefore(js, fjs);
          }(document, 'script', 'facebook-jssdk'));
-      div(ui-view) 
+      ol.breadcrumb.pull-right
+        li
+          a(href='javascript:;') Home
+        li.active Calendar
+      h1.page-header
+        | Calendar 
+        small header small text goes here...
+      
+      div(ui-view)
+     
