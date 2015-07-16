@@ -38,6 +38,7 @@ var friends = new mongoose.Schema({
 })
 var temp1 = new mongoose.Schema({
 	id:{type: String},
+	post:{type: Number},
 	name:{type: String},
 	parent:{type: String},
 	status:{type: Number},
@@ -66,7 +67,7 @@ uLogin.lean().exec(function (err,docs) {
 		    //console.log('uL' + uL.length);
 		    while(uS.length >=0 && tempL != undefined && tempS != undefined){
 			    if(tempL.id == tempS.id){
-				    console.log('uS.length:'+uS.length);
+				    //console.log('uS.length:'+uS.length);
 				    var match = new Object();
 				    match.id = tempL.id;
 				    match.name = tempL.name;
@@ -178,6 +179,7 @@ uLogin.lean().exec(function (err,docs) {
 													       });
 				  			  						      	var tmp1 ={
 				  			  							      id:uLO[t].id,
+														      post:postnum,
 				  			  							      name:uLO[t].name,
 				  			  							      parent:uLO[t].parent,
 				  			  							      status:uLO[t].status,
@@ -208,6 +210,7 @@ uLogin.lean().exec(function (err,docs) {
 									for(var p = 0; p < uLO.length; p++){
 	  		  						      var tmp1 ={
 	  		  							      id:uLO[p].id,
+										      post:postnum,
 	  		  							      name:uLO[p].name,
 	  		  							      parent:uLO[p].parent,
 	  		  							      status:uLO[p].status,
@@ -222,6 +225,7 @@ uLogin.lean().exec(function (err,docs) {
 			  					      	for(var p = 0; p < uLS.length; p++){
 			  						      var tmp1 ={
 			  							      id:uLS[p].id,
+										      post:postnum,
 			  							      name:uLS[p].name,
 			  							      parent:uLS[p].parent,
 			  							      status:uLS[p].status,
