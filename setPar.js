@@ -23,7 +23,7 @@ process.on('SIGINT', function() {
     process.exit(0);
   });
 });
-
+var postnum = 1;//POSTNUMBER!!!
 var userdatas = new mongoose.Schema({
 	post:{type: Number},
 	event:{type: String},
@@ -45,16 +45,14 @@ var temp1 = new mongoose.Schema({
 var user = mongoose.model('user',userdatas);
 var friend = mongoose.model('friend', friends);
 var t1 = mongoose.model('t1', temp1);
-
-//var temp new Array();
 //first time
-var uLogin = user.find({'event':'login'}).sort({'time':'ascending'});
+var uLogin = user.find({'event':'login', 'post':postnum}).sort({'time':'ascending'});
 uLogin.select('id name time');
 uLogin.lean().exec(function (err,docs) {
   if (err) return handleError(err);
   else{
 	  var uL = docs;
-	  var uShare = user.find({'event':'share'}).sort({'time':'ascending'});
+	  var uShare = user.find({'event':'share', 'post':postnum}).sort({'time':'ascending'});
 	  uShare.select('id time');
 	  uShare.lean().exec(function (err, docs) {
 	    if (err) return handleError(err);
