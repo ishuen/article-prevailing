@@ -33,6 +33,10 @@ var temp2 = new mongoose.Schema({
 var t1 = mongoose.model('t1', temp1);
 var t2 = mongoose.model('t2', temp2);
 
+ var query = t2.remove({'post': postnum}, function (err,docs) {
+  if (err) return handleError(err);
+});
+
 var query = t1.find({'post':postnum});
 query.lean().exec(function (err, docs) {
   if (err) return handleError(err);
