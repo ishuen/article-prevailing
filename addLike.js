@@ -39,15 +39,15 @@ query.lean().exec(function (err, docs) {
   if (err) return handleError(err);
   else{
 	var likes = docs;
-	console.log('likes:');
-	console.log(likes);
+	//console.log('likes:');
+	//console.log(likes);
 	var query = t1.find({'post':postnum});
 	query.lean().exec(function (err, docs) {
 	  if (err) return handleError(err);
 	  else{
 		  var par = docs;
-		  console.log('par:');
-		  console.log(par);
+		  //console.log('par:');
+		  //console.log(par);
 		  var count = likes.length;
 		  var tempL = likes.pop();
 		  var tempP = par.pop();
@@ -57,15 +57,19 @@ query.lean().exec(function (err, docs) {
 				  t1.findByIdAndUpdate(tempP._id,{$set:{'status':tempP.status}},function (err, docs) {
   					if (err) return handleError(err);
   				      	else{
-  				      		console.log(docs);
+  				      		console.log(tempP.id + '_status: '+tempP.status);
 						console.log('endupdate');
 	      				  	
   				      	}
 				});
-	  			console.log(tempP._id);
+	  			//console.log(tempP._id);
 			  	tempL = likes.pop();
 			  	tempP = par.pop();
 	  			count--;
+			  }
+			  else if(tempL.id == tempP.id && (tempP.status == 1 ||tempP.status == 3)){
+				  count--;
+				  console.log('already updated');
 			  }
 			  else{
 				  par.unshift(tempP);
