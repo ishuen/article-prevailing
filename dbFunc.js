@@ -229,7 +229,7 @@ function setParent(postnum){
 	  //console.log('end searching');
 	})
 	
-}
+};
 
 function addLike(postnum){
 	var userdatas = new mongoose.Schema({
@@ -302,4 +302,4 @@ function addLike(postnum){
 	  console.log('end searching');
 	})
 	
-}
+};
