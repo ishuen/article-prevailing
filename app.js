@@ -1,7 +1,7 @@
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
-var errorHandler = require('errorhandler');
+var handleError = require('errorhandler');
 var path = require('path');
 var fs = require('fs');
 var dbfunc = require('./db.js');
@@ -37,7 +37,21 @@ app.get('/',function(req, res){
     res.sendFile(__dirname + '/views/index.html');   
 
 });
-
+app.post('/transformdata',function(req, res){ 
+    var postid = req.body;
+    console.log('postid',postid.postid);
+    dbfunc.setParent(postid.postid);
+    dbfunc.addLike(postid.postid);
+    /*
+    console.log('postid',postid);
+    console.log('eventtype',eventtype);
+    console.log('name',username);
+    console.log('id',userid);
+    console.log('time',time);
+    */
+    //dbfunc.userevent(postdata);
+    res.end();
+});
 app.post('/user',function(req, res){ 
     var postdata = req.body;
     var post = req.body.post;
@@ -62,6 +76,7 @@ app.post('/friends',function(req, res){
     //dbfunc.userevent(postdata);
     res.end();
 });
+
 
 server.listen(8000,'127.0.0.1',function(){
     console.log('HTTP伺服器在 http://127.0.0.1:8000/ 上運行');
