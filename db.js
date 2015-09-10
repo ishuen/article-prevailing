@@ -44,8 +44,13 @@ var friendData = mongoose.model('friends', friendSchema);
 
 module.exports.userevent=function(data){
   console.log('inuserevent');
-  console.log('data',data)
+  console.log('data',data);
   var user = new userData(data);
+  /*
+  user.find({'name':data.name, 'event':'login'}, function (err, docs) {
+    console.log('docs',docs);
+  });
+  */
   user.save(function(err, usr) {
     if (err) return console.error(err);
     console.log(user);

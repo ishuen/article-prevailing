@@ -77,7 +77,14 @@ app.config(function($stateProvider, $urlRouterProvider,$controllerProvider) {
 
 });
 app.controller('graphuiCtrl', function ($scope, $http, $window) {
-
+  var user={};
+  var userdata={
+    "post": "",
+    "event": "",
+    "name": "",
+    "id": "",
+    "time": "" 
+  };
   for(var i = 0; i<menu.length;i++)
     menu[i].open=false;
   
@@ -107,26 +114,18 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     var userid, username=0;
     FB.login(function(response) {
       FB.api('/me', function(response) {
-        userid=response.id;
-        username=response.name;
-        var time = new Date().getTime();
-        console.log('Name:' + response.name + event_type);
-        console.log('ID:' + response.id + '.');
-        console.log('Time:', time); 
-        
-        var url = $window.location.href;
-        var split = url.split('/');
-        var postid = parseInt(split[split.length-1]);
-        if(typeof postid!="number")
-          return;
-        var passdata = 
-        {
-          "post": postid,
-          "event": event_type,
-          "name": response.name,
-          "id": response.id,
-          "time": time
-        };
+        userdata.id=response.id;
+        userdata.name=response.name;
+        userdata.time = new Date().getTime();
+        userdata.event=event_type;
+        userdata.post=0;
+        console.log('Name:' + userdata.name + userdata.event);
+        console.log('ID:' + userdata.id + '.');
+        console.log('Postid:', userdata.post); 
+        console.log('Time:', userdata.time); 
+        user = angular.copy(userdata);
+        var passdata= angular.copy(userdata);
+        console.log('userdata',passdata);
         $http.post('/user',passdata).
           success(function(data, status, headers, config) {
             console.log('userpassing!');
@@ -134,29 +133,30 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
           error(function(data, status, headers, config) {
             console.log('error',status);
           });
-      });
-      FB.api('/me/taggable_friends', function(response) {
-        
-        var tempfriend = response.data;
-        var friends=[];
-        for(var i = 0; i<tempfriend.length;i++)
-          friends.push(tempfriend[i].name);
-        console.log('friends',friends);
+        FB.api('/me/taggable_friends', function(response) {
+          
+          var tempfriend = response.data;
+          var friends=[];
+          for(var i = 0; i<tempfriend.length;i++)
+            friends.push(tempfriend[i].name);
+          console.log('friends',friends);
 
-        var passdata = 
-        {
-          "id": userid,
-          "name": username,
-          "friends": friends
-        };
-        $http.post('/friends',passdata).
-          success(function(data, status, headers, config) {
-            console.log('passing!');
-          }).
-          error(function(data, status, headers, config) {
-            console.log('error',status);
-          });
-      });  
+          var passdata = 
+          {
+            "id": userdata.id,
+            "name": userdata.name,
+            "friends": friends
+          };
+          $http.post('/friends',passdata).
+            success(function(data, status, headers, config) {
+              console.log('passing!');
+            }).
+            error(function(data, status, headers, config) {
+              console.log('error',status);
+            });
+        });  
+      });
+      
     }, {scope: 'user_friends'});
   };
 
@@ -167,22 +167,23 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
         console.log('incheck');
 
         FB.api('/me', function(response) {
-          console.log('Name:' + response.name + event_type);
-          console.log('ID:' + response.id + '.');
-          console.log('Time:', time); 
           var url = $window.location.href;
           var split = url.split('/');
           var postid = parseInt(split[split.length-1]);
-          if(typeof postid!="number")
+          if(isNaN(postid)){
+            $scope.login('login');
             return;
-          var passdata = 
-          {
-            "post": postid,
-            "event": event_type,
-            "name": response.name,
-            "id": response.id,
-            "time": time
-          };
+          }  
+          userdata.id=response.id;
+          userdata.name=response.name;
+          userdata.time = new Date().getTime();
+          userdata.event=event_type;
+          userdata.post=postid;
+          console.log('Name:' + userdata.name + userdata.event);
+          console.log('ID:' + userdata.id + '.');
+          console.log('Postid:', userdata.post); 
+          console.log('Time:', userdata.time); 
+          var passdata = angular.copy(userdata); 
           $http.post('/user',passdata).
             success(function(data, status, headers, config) {
               console.log('passing!');
