@@ -59,12 +59,19 @@ module.exports.userevent=function(data){
 }
 module.exports.friendlist=function(data){
   console.log('infriend');
-  console.log('data',data)
-  var list = new friendData(data);
-  list.save(function(err, usr) {
-    if (err) return console.error(err);
-    //console.log(list);
+  console.log('data',data);
+  friendData.find({'id':data.id, 'name':data.name}, function (err, docs) {
+    console.log('docs',docs);
+    if(docs.length==0){
+      var list = new friendData(data);
+        list.save(function(err, usr) {
+          if (err) return console.error(err);
+        });
+    }
+    else
+      friendData.update({'id':data.id, 'name':data.name, 'friends':data.friends})
   });
+  
 }
 var userdatas = new mongoose.Schema({
     post:{type: Number},

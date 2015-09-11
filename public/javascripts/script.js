@@ -140,6 +140,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
         FB.api('/me/taggable_friends', function(response) {
           
           var tempfriend = response.data;
+          console.log('tempfriend',tempfriend);
           var friends=[];
           for(var i = 0; i<tempfriend.length;i++)
             friends.push(tempfriend[i].name);
@@ -165,13 +166,13 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
 
   $scope.checkLogin=function(event_type){
+    console.log('incheck');
     if(event_type=="login"){
       $scope.login();
       return;
     }
     FB.getLoginStatus(function(response){
       var time = new Date().getTime();
-      console.log('incheck');
       FB.api('/me', function(response) {
         var url = $window.location.href;
         var split = url.split('/');
