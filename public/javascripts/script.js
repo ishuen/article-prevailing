@@ -109,16 +109,20 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
   $scope.notlog=true;
   $scope.url = 'http://localhost:8000';
-  $scope.login=function(event_type){
+  $scope.login=function(){
+    var event_type="login";
     console.log('login');
     var userid, username=0;
     FB.login(function(response) {
       FB.api('/me', function(response) {
+        var url = $window.location.href;
+        var split = url.split('/');
+        var postid = parseInt(split[split.length-1]);
         userdata.id=response.id;
         userdata.name=response.name;
         userdata.time = new Date().getTime();
         userdata.event=event_type;
-        userdata.post=0;
+        userdata.post=postid;
         console.log('Name:' + userdata.name + userdata.event);
         console.log('ID:' + userdata.id + '.');
         console.log('Postid:', userdata.post); 
@@ -141,15 +145,15 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
             friends.push(tempfriend[i].name);
           console.log('friends',friends);
 
-          var passdata = 
+          var frienddata = 
           {
-            "id": userdata.id,
-            "name": userdata.name,
+            "id": user.id,
+            "name": user.name,
             "friends": friends
           };
-          $http.post('/friends',passdata).
+          $http.post('/friends',frienddata).
             success(function(data, status, headers, config) {
-              console.log('passing!');
+              console.log('friendpassing!');
             }).
             error(function(data, status, headers, config) {
               console.log('error',status);
@@ -161,42 +165,37 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
 
   $scope.checkLogin=function(event_type){
+    if(event_type=="login"){
+      $scope.login();
+      return;
+    }
     FB.getLoginStatus(function(response){
-      if (response.status === 'connected') {
-        var time = new Date().getTime();
-        console.log('incheck');
+      var time = new Date().getTime();
+      console.log('incheck');
+      FB.api('/me', function(response) {
+        var url = $window.location.href;
+        var split = url.split('/');
+        var postid = parseInt(split[split.length-1]);
+        userdata.id=response.id;
+        userdata.name=response.name;
+        userdata.time = new Date().getTime();
+        userdata.event=event_type;
+        userdata.post=postid;
+        console.log('Name:' + userdata.name + userdata.event);
+        console.log('ID:' + userdata.id + '.');
+        console.log('Postid:', userdata.post); 
+        console.log('Time:', userdata.time); 
+        var passdata = angular.copy(userdata); 
+        $http.post('/user',passdata).
+          success(function(data, status, headers, config) {
+            console.log('passing!');
+          }).
+          error(function(data, status, headers, config) {
+            console.log('error',status);
 
-        FB.api('/me', function(response) {
-          var url = $window.location.href;
-          var split = url.split('/');
-          var postid = parseInt(split[split.length-1]);
-          if(isNaN(postid)){
-            $scope.login('login');
-            return;
-          }  
-          userdata.id=response.id;
-          userdata.name=response.name;
-          userdata.time = new Date().getTime();
-          userdata.event=event_type;
-          userdata.post=postid;
-          console.log('Name:' + userdata.name + userdata.event);
-          console.log('ID:' + userdata.id + '.');
-          console.log('Postid:', userdata.post); 
-          console.log('Time:', userdata.time); 
-          var passdata = angular.copy(userdata); 
-          $http.post('/user',passdata).
-            success(function(data, status, headers, config) {
-              console.log('passing!');
-            }).
-            error(function(data, status, headers, config) {
-              console.log('error',status);
-
-            });
-        }); 
-      }
-      else{
-        $scope.login('login');
-      }     
+          });
+      }); 
+         
     }); 
   }; 
 

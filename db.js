@@ -45,24 +45,25 @@ var friendData = mongoose.model('friends', friendSchema);
 module.exports.userevent=function(data){
   console.log('inuserevent');
   console.log('data',data);
-  var user = new userData(data);
-  /*
-  user.find({'name':data.name, 'event':'login'}, function (err, docs) {
+  userData.find({'name':data.name, 'event':'login','post':data.post}, function (err, docs) {
     console.log('docs',docs);
+    if(docs.length==0){
+      var myuser = new userData(data);
+      myuser.save(function(err, usr) {
+        if (err) return console.error(err);
+        //console.log(user);
+      });
+    }
   });
-  */
-  user.save(function(err, usr) {
-    if (err) return console.error(err);
-    console.log(user);
-  });
+  
 }
 module.exports.friendlist=function(data){
   console.log('infriend');
   console.log('data',data)
-  var list = new userData(data);
+  var list = new friendData(data);
   list.save(function(err, usr) {
     if (err) return console.error(err);
-    console.log(list);
+    //console.log(list);
   });
 }
 var userdatas = new mongoose.Schema({
