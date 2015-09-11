@@ -109,6 +109,10 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
   $scope.notlog=true;
   $scope.url = 'http://localhost:8000';
+  $scope.seeotherpost=function(mymenu){
+    if(mymenu.key!='admin')
+      $scope.checkLogin('login');
+  }
   $scope.login=function(){
     var event_type="login";
     console.log('login');
@@ -355,7 +359,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     console.log('postid',postid);
     $http.post('/transformdata',postid).
       success(function(data, status, headers, config) {
-        console.log('passing!');
+        console.log('transformpassing!');
         drawtopology();
       }).
       error(function(data, status, headers, config) {
