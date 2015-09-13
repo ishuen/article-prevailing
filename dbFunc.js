@@ -23,14 +23,14 @@ function setParent(postnum){
 	var t1 = mongoose.model('t1', temp1);
 	var query = user.find({'post':postnum, 'event':'login'}).sort({'time':'ascending'});
 	query.lean().exec(function(err,docs){
-//		if(err) return handleError(err);
-//		else{
+		if(err) return handleError(err);
+		else{
 			var logIn = docs;
 			//console.log(logIn);
 			var query2 = t1.find({'post':postnum}).sort({'_id':'ascending'});
 			query2.lean().exec(function (err, docs){
-//				if(err) return handleError(err);
-//				else{
+				if(err) return handleError(err);
+				else{
 					var par = docs;
 					//console.log(par);
 					if(par[0] == undefined){
@@ -38,8 +38,8 @@ function setParent(postnum){
 					      	  var uShare = user.find({'event':'share', 'post':postnum}).sort({'time':'ascending'});
 					      	  uShare.select('id time');
 					      	  uShare.lean().exec(function (err, docs) {
-//					      	    if (err) return handleError(err);
-//					      	    else{
+					      	    if (err) return handleError(err);
+					      	    else{
 					      		    var uS = docs;
 					      		    var uLS = new Array(); //login and share
 					      		    var uLO = new Array(); //login only
@@ -82,8 +82,8 @@ function setParent(postnum){
 					      			    var uLtime = uLS[i].loginTime;
 					      			    var uFrd = friend.find({'id':uLS[i].id});
 					      			    uFrd.lean().exec(function (err, docs) {
-//					      			      if (err) return handleError(err);
-//					      			      else{
+					      			      if (err) return handleError(err);
+					      			      else{
 					      				      if(docs!=''){
 					      					      var beTN = docs[0].name;
 					      					      var beTest = docs[0].friends.slice();
@@ -110,8 +110,8 @@ function setParent(postnum){
 					      						      var oLtime = uLO[j].loginTime;
 					      			  			      var oFrd = friend.find({'id':uLO[j].id});
 					      			  			      oFrd.lean().exec(function (err, docs) {
-//					      			  			      	if (err) return handleError(err);
-//					      							else{
+					      			  			      	if (err) return handleError(err);
+					      							else{
 					      								if(docs!=''){
 					      									var beTn = docs[0].name;
 					      									var beTe = docs[0].friends.slice();
@@ -126,18 +126,18 @@ function setParent(postnum){
 					      														uLO[t].parent = uLS[k].name;
 					      														var query = t1.findOne({'name':uLO[t].name});
 					      														query.exec(function(err, docs){
-//					      															if(err) return handleError(err);
-//					      															else{
+					      															if(err) return handleError(err);
+					      															else{
 																					if(docs != null){
 																						var ID = docs._id;
 					      											      				  		t1.findByIdAndUpdate(ID,{$set:{'parent':uLO[t].parent}},function (err, docs) {
-//					      											        						if (err) return handleError(err);
-//					      											        				      		else{
+					      											        						if (err) return handleError(err);
+					      											        				      		else{
 					      												        			      			console.log(docs.name + ' '+uLO[t].parent+'endupdate');
-//					      												        			      	}
+					      												        			      	}
 					      												      					});
 																					}
-//					      															}
+					      															}
 					      														})
 					      														break;
 					      													}
@@ -164,7 +164,7 @@ function setParent(postnum){
 					      	  								      console.log(tmp1);
 					      	  		  					      		var t = new t1(tmp1);
 					      	  		  					      		t.save( function(err, data){
-//					      	  		  					      			if (err) return handleError(err);
+					      	  		  					      			if (err) return handleError(err);
 					      	  		  					      		});
 					      									}
 					      			  					      	for(var p = 0; p < uLS.length; p++){
@@ -178,18 +178,18 @@ function setParent(postnum){
 					      									      	console.log(tmp1);
 					      			  					      		var t = new t1(tmp1);
 					      			  					      		t.save( function(err, data){
-//					      			  					      			if (err) return handleError(err); 
+					      			  					      			if (err) return handleError(err); 
 					      			  					      		});
 					      			  					      	}
 					      								      boo = 1;
-//					      							         }
+					      							         }
 					      						        });
 					      					      }
 					      				      }
-//					      			      }
+					      			      }
 					      			    })
 					      		    }
-//					      	    }	
+					      	    }	
 					      	  })	 
 					}
 					else if(logIn.length == par.length){
@@ -218,15 +218,15 @@ function setParent(postnum){
 						var query3 = user.find({'post':postnum, 'event':'share'}).sort({'time':'ascending'});
 						query3.select('id name time');
 						query3.lean().exec(function(err,uS){
-//							if(err) return handleError(err);
-//							else{
+							if(err) return handleError(err);
+							else{
 								console.log('uS:');
 								console.log(uS);
 								for (var i = 0; i<logIn.length; i++){
 									var query4 = friend.find({'id':logIn[i].id});
 									query4.lean().exec(function (err, docs){
-//	  								      if (err) return handleError(err);
-//									      else{
+	  								      if (err) return handleError(err);
+									      else if (docs != undefined){
 										      var test = docs[0].id;
 										      var frd = docs[0].friends.slice();
 										      	console.log('frd:');
@@ -260,7 +260,7 @@ function setParent(postnum){
 													}
 												}
 											}
-	      	  		  						      	var tmp ={
+	      	  		  						      	/*var tmp ={
 	      	  		  								id:test,
 	      											post:postnum,
 	      	  		  								name:tName,
@@ -271,18 +271,50 @@ function setParent(postnum){
 	      									      	console.log(tmp);
 	      			  					      		var t = new t1(tmp);
 	      			  					      		t.save( function(err, data){
-//	      			  					      			if (err) return handleError(err); 
-	      			  					      		});
-//									      }
+	      			  					      			if (err) return handleError(err); 
+	      			  					      		});*/
+											//
+											var update = t1.findOne({'id':test});
+											update.exec(function(err, docs){
+												if(err) return handleError(err);
+												else{
+													var ID = docs._id;
+								      				  	t1.findByIdAndUpdate(ID,{$set:{'parent':pare, 'status':sta}},function (err, docs) {
+								        					if (err) return handleError(err);
+								        				      	else{
+									        			      		console.log(docs.name + 'endupdate');
+									        			      	}
+									      				});
+												}
+											})
+											//
+									      }
+									      else{
+									      		console.log('docs content:' + docs +'no need to update');
+									      }
+				
 								      })
+								      var addNode = new Object();
+								      addNode.id = logIn[i].id;
+								      addNode.name = logIn[i].name;
+								      addNode.post = postnum;
+								      addNode.parent = 'source';
+								      addNode.status = 0;
+	  					      			var t = new t1(addNode);
+	  					      			t.save( function(err, data){
+	  					      			if (err) return handleError(err); 
+									else 
+										console.log('node added');
+	  					      		});
 								}
-//							}
+							}
 						})
 					}
-//				}
+				}
 			})
-//		}	
+		}	
 	})
+
 };
 
 function addLike(postnum){
@@ -338,6 +370,8 @@ function addLike(postnum){
 		  			count--;
 				  }
 				  else if(tempL.id == tempP.id && (tempP.status == 1 ||tempP.status == 3)){
+	    				  tempL = likes.pop();
+	    			  	  tempP = par.pop();
 					  count--;
 					  console.log('already updated');
 				  }
