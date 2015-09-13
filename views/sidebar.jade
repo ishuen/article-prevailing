@@ -8,6 +8,6 @@
           i.fa.fa-laptop
           span {{menu.title}}
         ul.sub-menu(ng-if="haschild(menu)" collapse="!menu.open")
-          li(ng-repeat="smenu in menu.children")
+          li(ng-repeat="smenu in menu.children" ng-click="seeotherpost(menu)")
             a(ui-sref="{{menu.key+'-'+smenu.key}}") {{smenu.title}}
 .sidebar-bg

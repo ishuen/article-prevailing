@@ -77,7 +77,14 @@ app.config(function($stateProvider, $urlRouterProvider,$controllerProvider) {
 
 });
 app.controller('graphuiCtrl', function ($scope, $http, $window) {
-
+  var user={};
+  var userdata={
+    "post": "",
+    "event": "",
+    "name": "",
+    "id": "",
+    "time": "" 
+  };
   for(var i = 0; i<menu.length;i++)
     menu[i].open=false;
   
@@ -102,31 +109,31 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
   $scope.notlog=true;
   $scope.url = 'http://localhost:8000';
-  $scope.login=function(event_type){
+  $scope.seeotherpost=function(mymenu){
+    if(mymenu.key!='admin')
+      $scope.checkLogin('login');
+  }
+  $scope.login=function(){
+    var event_type="login";
     console.log('login');
     var userid, username=0;
     FB.login(function(response) {
       FB.api('/me', function(response) {
-        userid=response.id;
-        username=response.name;
-        var time = new Date().getTime();
-        console.log('Name:' + response.name + event_type);
-        console.log('ID:' + response.id + '.');
-        console.log('Time:', time); 
-        
         var url = $window.location.href;
         var split = url.split('/');
         var postid = parseInt(split[split.length-1]);
-        if(typeof postid!="number")
-          return;
-        var passdata = 
-        {
-          "post": postid,
-          "event": event_type,
-          "name": response.name,
-          "id": response.id,
-          "time": time
-        };
+        userdata.id=response.id;
+        userdata.name=response.name;
+        userdata.time = new Date().getTime();
+        userdata.event=event_type;
+        userdata.post=postid;
+        console.log('Name:' + userdata.name + userdata.event);
+        console.log('ID:' + userdata.id + '.');
+        console.log('Postid:', userdata.post); 
+        console.log('Time:', userdata.time); 
+        user = angular.copy(userdata);
+        var passdata= angular.copy(userdata);
+        console.log('userdata',passdata);
         $http.post('/user',passdata).
           success(function(data, status, headers, config) {
             console.log('userpassing!');
@@ -134,68 +141,66 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
           error(function(data, status, headers, config) {
             console.log('error',status);
           });
-      });
-      FB.api('/me/taggable_friends', function(response) {
-        
-        var tempfriend = response.data;
-        var friends=[];
-        for(var i = 0; i<tempfriend.length;i++)
-          friends.push(tempfriend[i].name);
-        console.log('friends',friends);
+        FB.api('/me/taggable_friends', function(response) {
+          
+          var tempfriend = response.data;
+          console.log('tempfriend',tempfriend);
+          var friends=[];
+          for(var i = 0; i<tempfriend.length;i++)
+            friends.push(tempfriend[i].name);
+          console.log('friends',friends);
 
-        var passdata = 
-        {
-          "id": userid,
-          "name": username,
-          "friends": friends
-        };
-        $http.post('/friends',passdata).
+          var frienddata = 
+          {
+            "id": user.id,
+            "name": user.name,
+            "friends": friends
+          };
+          $http.post('/friends',frienddata).
+            success(function(data, status, headers, config) {
+              console.log('friendpassing!');
+            }).
+            error(function(data, status, headers, config) {
+              console.log('error',status);
+            });
+        });  
+      });
+      
+    }, {scope: 'user_friends'});
+  };
+
+  $scope.checkLogin=function(event_type){
+    console.log('incheck');
+    if(event_type=="login"){
+      $scope.login();
+      return;
+    }
+    FB.getLoginStatus(function(response){
+      var time = new Date().getTime();
+      FB.api('/me', function(response) {
+        var url = $window.location.href;
+        var split = url.split('/');
+        var postid = parseInt(split[split.length-1]);
+        userdata.id=response.id;
+        userdata.name=response.name;
+        userdata.time = new Date().getTime();
+        userdata.event=event_type;
+        userdata.post=postid;
+        console.log('Name:' + userdata.name + userdata.event);
+        console.log('ID:' + userdata.id + '.');
+        console.log('Postid:', userdata.post); 
+        console.log('Time:', userdata.time); 
+        var passdata = angular.copy(userdata); 
+        $http.post('/user',passdata).
           success(function(data, status, headers, config) {
             console.log('passing!');
           }).
           error(function(data, status, headers, config) {
             console.log('error',status);
+
           });
-      });  
-    }, {scope: 'user_friends'});
-  };
-
-  $scope.checkLogin=function(event_type){
-    FB.getLoginStatus(function(response){
-      if (response.status === 'connected') {
-        var time = new Date().getTime();
-        console.log('incheck');
-
-        FB.api('/me', function(response) {
-          console.log('Name:' + response.name + event_type);
-          console.log('ID:' + response.id + '.');
-          console.log('Time:', time); 
-          var url = $window.location.href;
-          var split = url.split('/');
-          var postid = parseInt(split[split.length-1]);
-          if(typeof postid!="number")
-            return;
-          var passdata = 
-          {
-            "post": postid,
-            "event": event_type,
-            "name": response.name,
-            "id": response.id,
-            "time": time
-          };
-          $http.post('/user',passdata).
-            success(function(data, status, headers, config) {
-              console.log('passing!');
-            }).
-            error(function(data, status, headers, config) {
-              console.log('error',status);
-
-            });
-        }); 
-      }
-      else{
-        $scope.login('login');
-      }     
+      }); 
+         
     }); 
   }; 
 
@@ -354,7 +359,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     console.log('postid',postid);
     $http.post('/transformdata',postid).
       success(function(data, status, headers, config) {
-        console.log('passing!');
+        console.log('transformpassing!');
         drawtopology();
       }).
       error(function(data, status, headers, config) {

@@ -44,21 +44,34 @@ var friendData = mongoose.model('friends', friendSchema);
 
 module.exports.userevent=function(data){
   console.log('inuserevent');
-  console.log('data',data)
-  var user = new userData(data);
-  user.save(function(err, usr) {
-    if (err) return console.error(err);
-    console.log(user);
+  console.log('data',data);
+  userData.find({'name':data.name, 'event':'login','post':data.post}, function (err, docs) {
+    console.log('docs',docs);
+    if(docs.length==0){
+      var myuser = new userData(data);
+      myuser.save(function(err, usr) {
+        if (err) return console.error(err);
+        //console.log(user);
+      });
+    }
   });
+  
 }
 module.exports.friendlist=function(data){
   console.log('infriend');
-  console.log('data',data)
-  var list = new userData(data);
-  list.save(function(err, usr) {
-    if (err) return console.error(err);
-    console.log(list);
+  console.log('data',data);
+  friendData.find({'id':data.id, 'name':data.name}, function (err, docs) {
+    console.log('docs',docs);
+    if(docs.length==0){
+      var list = new friendData(data);
+        list.save(function(err, usr) {
+          if (err) return console.error(err);
+        });
+    }
+    else
+      friendData.update({'id':data.id, 'name':data.name, 'friends':data.friends})
   });
+  
 }
 var userdatas = new mongoose.Schema({
     post:{type: Number},
@@ -87,7 +100,6 @@ module.exports.setParent=function(postnum){
   var query = user.find({'post':postnum, 'event':'login'}).sort({'time':'ascending'});
   query.lean().exec(function(err,docs){
     if(err) return err;
-    else{
       var logIn = docs;
       console.log(logIn);
       var query2 = t1.find({'post':postnum}).sort({'_id':'ascending'});
@@ -146,7 +158,6 @@ module.exports.setParent=function(postnum){
                           var uFrd = friend.find({'id':uLS[i].id});
                           uFrd.lean().exec(function (err, docs) {
                             if (err) return err;
-                            else{
                               if(docs!=''){
                                 var beTN = docs[0].name;
                                 var beTest = docs[0].friends.slice();
@@ -190,17 +201,15 @@ module.exports.setParent=function(postnum){
                                             var query = t1.findOne({'name':uLO[t].name});
                                             query.exec(function(err, docs){
                                               if(err) return err;
-                                              else{
                                           if(docs != null){
                                             var ID = docs._id;
                                                           t1.findByIdAndUpdate(ID,{$set:{'parent':uLO[t].parent}},function (err, docs) {
                                                           if (err) return err;
-                                                                else{
-                                                                  console.log(docs.name + ' '+uLO[t].parent+'endupdate');
-                                                              }
+                                                              
+                                                          console.log(docs.name + ' '+uLO[t].parent+'endupdate');
+                                                              
                                                         });
                                           }
-                                              }
                                             })
                                             break;
                                           }
@@ -249,7 +258,6 @@ module.exports.setParent=function(postnum){
                                     });
                                 }
                               }
-                            }
                           })
                         }
                       } 
@@ -282,14 +290,12 @@ module.exports.setParent=function(postnum){
             query3.select('id name time');
             query3.lean().exec(function(err,uS){
               if(err) return err;
-              else{
                 console.log('uS:');
                 console.log(uS);
                 for (var i = 0; i<logIn.length; i++){
                   var query4 = friend.find({'id':logIn[i].id});
                   query4.lean().exec(function (err, docs){
                           if (err) return err;
-                        else{
                           var test = docs[0].id;
                           var frd = docs[0].friends.slice();
                             console.log('frd:');
@@ -336,15 +342,12 @@ module.exports.setParent=function(postnum){
                       t.save( function(err, data){
                         if (err) return err; 
                       });
-                    }
                   })
                 }
-              }
             })
           }
         }
-      })
-    } 
+      }) 
   })
 };
 module.exports.addLike=function(postnum){
@@ -353,14 +356,12 @@ module.exports.addLike=function(postnum){
   query.select('id');
   query.lean().exec(function (err, docs) {
     if (err) return err;
-    else{
     var likes = docs;
     //console.log('likes:');
     //console.log(likes);
     var query = t1.find({'post':postnum});
     query.lean().exec(function (err, docs) {
       if (err) return err;
-      else{
         var par = docs;
         //console.log('par:');
         //console.log(par);
@@ -372,11 +373,11 @@ module.exports.addLike=function(postnum){
             tempP.status++;
             t1.findByIdAndUpdate(tempP._id,{$set:{'status':tempP.status}},function (err, docs) {
               if (err) return err;
-                    else{
-                      console.log(tempP.id + '_status: '+tempP.status);
+
+              console.log(tempP.id + '_status: '+tempP.status);
               console.log('endupdate');
                     
-                    }
+
           });
             //console.log(tempP._id);
             tempL = likes.pop();
@@ -394,13 +395,10 @@ module.exports.addLike=function(postnum){
         
         
         }
-      
-      }
+    
       console.log('end searching');
     })
-    }     
     console.log('end searching');
   })
   
 };
-
