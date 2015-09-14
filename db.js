@@ -99,21 +99,22 @@ module.exports.setParent=function(postnum){
   console.log('insetParent');
   var query = user.find({'post':postnum, 'event':'login'}).sort({'time':'ascending'});
   query.lean().exec(function(err,docs){
-    if(err) return err;
+    if(err) return handleError(err);
+    else{
       var logIn = docs;
-      console.log(logIn);
+      //console.log(logIn);
       var query2 = t1.find({'post':postnum}).sort({'_id':'ascending'});
       query2.lean().exec(function (err, docs){
-        if(err) return err;
+        if(err) return handleError(err);
         else{
           var par = docs;
-          console.log(par);
+          //console.log(par);
           if(par[0] == undefined){
             console.log('no previous data');
                     var uShare = user.find({'event':'share', 'post':postnum}).sort({'time':'ascending'});
                     uShare.select('id time');
                     uShare.lean().exec(function (err, docs) {
-                      if (err) return err;
+                      if (err) return handleError(err);
                       else{
                         var uS = docs;
                         var uLS = new Array(); //login and share
@@ -157,7 +158,8 @@ module.exports.setParent=function(postnum){
                           var uLtime = uLS[i].loginTime;
                           var uFrd = friend.find({'id':uLS[i].id});
                           uFrd.lean().exec(function (err, docs) {
-                            if (err) return err;
+                            if (err) return handleError(err);
+                            else{
                               if(docs!=''){
                                 var beTN = docs[0].name;
                                 var beTest = docs[0].friends.slice();
@@ -184,7 +186,7 @@ module.exports.setParent=function(postnum){
                                   var oLtime = uLO[j].loginTime;
                                     var oFrd = friend.find({'id':uLO[j].id});
                                     oFrd.lean().exec(function (err, docs) {
-                                      if (err) return err;
+                                      if (err) return handleError(err);
                               else{
                                 if(docs!=''){
                                   var beTn = docs[0].name;
@@ -200,16 +202,18 @@ module.exports.setParent=function(postnum){
                                             uLO[t].parent = uLS[k].name;
                                             var query = t1.findOne({'name':uLO[t].name});
                                             query.exec(function(err, docs){
-                                              if(err) return err;
+                                              if(err) return handleError(err);
+                                              else{
                                           if(docs != null){
                                             var ID = docs._id;
                                                           t1.findByIdAndUpdate(ID,{$set:{'parent':uLO[t].parent}},function (err, docs) {
-                                                          if (err) return err;
-                                                              
-                                                          console.log(docs.name + ' '+uLO[t].parent+'endupdate');
-                                                              
+                                                          if (err) return handleError(err);
+                                                                else{
+                                                                  console.log(docs.name + ' '+uLO[t].parent+'endupdate');
+                                                              }
                                                         });
                                           }
+                                              }
                                             })
                                             break;
                                           }
@@ -236,7 +240,7 @@ module.exports.setParent=function(postnum){
                                           console.log(tmp1);
                                               var t = new t1(tmp1);
                                               t.save( function(err, data){
-                                                if (err) return err;
+                                                if (err) return handleError(err);
                                               });
                                   }
                                           for(var p = 0; p < uLS.length; p++){
@@ -250,7 +254,7 @@ module.exports.setParent=function(postnum){
                                           console.log(tmp1);
                                             var t = new t1(tmp1);
                                             t.save( function(err, data){
-                                              if (err) return err; 
+                                              if (err) return handleError(err); 
                                             });
                                           }
                                       boo = 1;
@@ -258,6 +262,7 @@ module.exports.setParent=function(postnum){
                                     });
                                 }
                               }
+                            }
                           })
                         }
                       } 
@@ -289,13 +294,15 @@ module.exports.setParent=function(postnum){
             var query3 = user.find({'post':postnum, 'event':'share'}).sort({'time':'ascending'});
             query3.select('id name time');
             query3.lean().exec(function(err,uS){
-              if(err) return err;
+              if(err) return handleError(err);
+              else{
                 console.log('uS:');
                 console.log(uS);
                 for (var i = 0; i<logIn.length; i++){
                   var query4 = friend.find({'id':logIn[i].id});
                   query4.lean().exec(function (err, docs){
-                          if (err) return err;
+                          if (err) return handleError(err);
+                        else if (docs != undefined){
                           var test = docs[0].id;
                           var frd = docs[0].friends.slice();
                             console.log('frd:');
@@ -329,39 +336,76 @@ module.exports.setParent=function(postnum){
                           }
                         }
                       }
-                      var tmp ={
-                        id:test,
-                        post:postnum,
-                        name:tName,
+                                      /*var tmp ={
+                                  id:test,
+                              post:postnum,
+                                  name:tName,
                         parent:pare,
                         status:sta,
-                       };
+                                      };
                       console.log('tmp:');
-                      console.log(tmp);
-                      var t = new t1(tmp);
-                      t.save( function(err, data){
-                        if (err) return err; 
-                      });
-                  })
+                                  console.log(tmp);
+                                    var t = new t1(tmp);
+                                    t.save( function(err, data){
+                                      if (err) return handleError(err); 
+                                    });*/
+                      //
+                      var update = t1.findOne({'id':test});
+                      update.exec(function(err, docs){
+                        if(err) return handleError(err);
+                        else{
+                          var ID = docs._id;
+                                  t1.findByIdAndUpdate(ID,{$set:{'parent':pare, 'status':sta}},function (err, docs) {
+                                  if (err) return handleError(err);
+                                        else{
+                                          console.log(docs.name + 'endupdate');
+                                        }
+                                });
+                        }
+                      })
+                      //
+                        }
+                        else{
+                            console.log('docs content:' + docs +'no need to update');
+                        }
+        
+                      })
+                      var addNode = new Object();
+                      addNode.id = logIn[i].id;
+                      addNode.name = logIn[i].name;
+                      addNode.post = postnum;
+                      addNode.parent = 'source';
+                      addNode.status = 0;
+                          var t = new t1(addNode);
+                          t.save( function(err, data){
+                          if (err) return handleError(err); 
+                  else 
+                    console.log('node added');
+                        });
                 }
+              }
             })
           }
         }
-      }) 
+      })
+    } 
   })
+
 };
 module.exports.addLike=function(postnum){
 
   var query = user.find({'event':'like', 'post': postnum }).sort({'time':'ascending'});
   query.select('id');
   query.lean().exec(function (err, docs) {
-    if (err) return err;
+//    if (err) return handleError(err);
+//    else{
     var likes = docs;
     //console.log('likes:');
     //console.log(likes);
     var query = t1.find({'post':postnum});
     query.lean().exec(function (err, docs) {
-      if (err) return err;
+//      if (err) return handleError(err);
+//      else{
         var par = docs;
         //console.log('par:');
         //console.log(par);
@@ -372,12 +416,12 @@ module.exports.addLike=function(postnum){
         if(tempL.id == tempP.id && (tempP.status == 0 ||tempP.status == 2)){
             tempP.status++;
             t1.findByIdAndUpdate(tempP._id,{$set:{'status':tempP.status}},function (err, docs) {
-              if (err) return err;
-
-              console.log(tempP.id + '_status: '+tempP.status);
+//              if (err) return handleError(err);
+//                    else{
+                      console.log(tempP.id + '_status: '+tempP.status);
               console.log('endupdate');
                     
-
+//                    }
           });
             //console.log(tempP._id);
             tempL = likes.pop();
@@ -385,6 +429,8 @@ module.exports.addLike=function(postnum){
             count--;
           }
           else if(tempL.id == tempP.id && (tempP.status == 1 ||tempP.status == 3)){
+                tempL = likes.pop();
+                  tempP = par.pop();
             count--;
             console.log('already updated');
           }
@@ -395,10 +441,11 @@ module.exports.addLike=function(postnum){
         
         
         }
-    
+      
+//      }
       console.log('end searching');
     })
-    console.log('end searching');
+//    }     
   })
   
 };
