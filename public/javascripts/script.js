@@ -22,7 +22,7 @@ var menu = [
         "url":"",
         "icon":"",
         "open":"",
-        "class":"fa fa-reddit",
+        "class":"fa icon-handbag",
         "children":[
             {
                 "key":"2",
@@ -175,7 +175,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
             error(function(data, status, headers, config) {
               console.log('error',status);
             });
-        });  
+        });
       });
     }, {scope: 'user_friends'});
   };
