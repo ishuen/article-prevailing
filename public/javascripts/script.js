@@ -2,14 +2,15 @@ var app = angular.module('graphui', ['ui.router','ui.bootstrap']);
 var menu = [
     {
         "key":"graph1507",
-        "title":"2015-07",
+        "title":"人物專訪",
         "url":"",
         "icon":"",
         "open":"",
+        "class":"fa fa-newspaper-o",
         "children":[
             {
                 "key":"1",
-                "title":"First Post",
+                "title":"讀書不是「唯一」，但卻是「正確」的路。",
                 "url":"/graph/1",
                 "templateUrl":"/views/partials/graph1507-1.html"
             }
@@ -17,14 +18,15 @@ var menu = [
     },
     {
         "key":"graph1506",
-        "title":"2015-06",
+        "title":"美容時尚",
         "url":"",
         "icon":"",
         "open":"",
+        "class":"fa fa-reddit",
         "children":[
             {
                 "key":"2",
-                "title":"Second Post",
+                "title":"風和日麗去野餐！5個穿搭Tips讓你成為動靜皆宜的it Girl",
                 "url":"/graph/2",
                 "templateUrl":"/views/partials/graph1506-1.html"
             }
@@ -36,6 +38,7 @@ var menu = [
         "url":"",
         "icon":"",
         "open":"",
+        "class":"fa fa-area-chart",
         "children":[
             {
                 "key":"topology",
@@ -109,6 +112,14 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
   $scope.notlog=true;
   $scope.url = 'http://localhost:8000';
+  $scope.ifinadmin=function(){
+    var url = $window.location.href;
+    var split = url.split('/');
+    if(split[split.length-1].split('-')[0]=="admin")
+      return true;
+    return false;
+  }
+  
   $scope.seeotherpost=function(mymenu){
     if(mymenu.key!='admin')
       $scope.checkLogin('login');
@@ -159,13 +170,13 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
           $http.post('/friends',frienddata).
             success(function(data, status, headers, config) {
               console.log('friendpassing!');
+              $scope.checkliked(userdata); 
             }).
             error(function(data, status, headers, config) {
               console.log('error',status);
             });
         });  
       });
-      
     }, {scope: 'user_friends'});
   };
 
@@ -194,6 +205,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
         $http.post('/user',passdata).
           success(function(data, status, headers, config) {
             console.log('passing!');
+            $scope.checkliked(userdata); 
           }).
           error(function(data, status, headers, config) {
             console.log('error',status);
@@ -226,6 +238,18 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     console.log('inlinke');
     $scope.checkLogin('like');
   }; 
+  $scope.checkliked=function(user){
+    console.log('checklikeduser',user);
+    $http.post('/checkliked',user).
+      success(function(data, status, headers, config) {
+        $scope.liked=data;
+        console.log('liked',$scope.liked);
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error',status);
+
+      });
+  }
   $scope.logout=function(){
     FB.logout(function(response) {
       
@@ -300,7 +324,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var url = "https://api.mongolab.com/api/1/databases/improject/collections/tryGraph?apiKey=R0klghAs8ttRla8MDvCfqAt_p8-2YmMu";
+  var url = "https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
 
 
   function update(source) {
@@ -370,3 +394,123 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
   $scope.transformdata();
 
 });
+app.controller('fanCtrl', function ($scope, $http, $window) {
+  $scope.fansdata=[];
+  var origindata=[];
+  $scope.ordercol='-count';
+  $scope.options=[
+    {key:"login",title:"Visit",value:true},
+    {key:"like",title:"Like",value:true},
+    {key:"share",title:"Share",value:true},
+  ];
+  $scope.type=$scope.options[1];
+  $scope.pagelist=[];
+  $scope.entry=10;
+  $http.get('/fandata').
+    success(function(data, status, headers, config) {
+      $scope.fansdata=angular.copy(data);
+      origindata=angular.copy(data);
+      console.log('origindata',origindata);
+      $scope.arrangedata($scope.type.key);
+      $scope.countpage();
+    }).
+    error(function(data, status, headers, config) {
+      console.log('error',status);
+    });
+  $scope.pageoption=[10,30,50,100];
+  $scope.arrangedata=function(type){
+    var idtemp=[];
+    var temp=[];
+    var mydata = origindata;
+    console.log('mydata',mydata);
+    for(var i=0; i<mydata.length;i++){
+      var entry = mydata[i];
+      if(entry.event!=type)
+        continue;
+      if(idtemp.indexOf(entry.id)<0){
+        var defaultdata={
+          id:entry.id,
+          event:entry.event,
+          name:entry.name,
+          count:1
+        }
+        idtemp.push(entry.id);
+        temp.push(defaultdata);
+      }
+      else{
+        for(var j=0; j<idtemp.length;j++){
+          if(entry.id==idtemp[j])
+            temp[j].count++;
+        }
+      }
+    }
+    $scope.fansdata=temp;
+    $scope.countpage()
+    console.log('data',$scope.fansdata);
+  }
+  $scope.countpage=function(){
+    $scope.pagelist=[];
+    var pagecount=0;
+    var totalpage=$scope.fansdata.length;
+    for(var i=0; i<$scope.options.length;i++){
+      var key = $scope.options[i].key;
+      var value = $scope.options[i].value;
+      if(value){
+        for(var j=0; j<$scope.fansdata.length;j++){
+          var entrydata=$scope.fansdata[j];
+          if(key==entrydata.event)
+            pagecount++;
+          
+        }
+      }
+    }
+    var entry;
+    var leaving = pagecount%$scope.entry;
+    if(pagecount>=$scope.entry){
+      if(leaving==0)
+        entry=pagecount/$scope.entry;
+      else  
+        entry=Math.ceil(pagecount/$scope.entry);
+    }
+    else
+       entry=1;
+    for(var i=0; i<entry;i++){
+      $scope.pagelist.push(i);
+    }
+    $scope.curpage=0;
+    $scope.changepage(0,'page');
+  }
+  $scope.changepage=function(index,pos){
+    if(pos=="pre" && $scope.curpage==0)
+      return;
+    if(pos=="next" && $scope.curpage==$scope.pagelist.length-1)
+      return;
+
+    $scope.start=index*$scope.entry;
+    $scope.end=$scope.start+$scope.entry-1;
+    $scope.curpage=index;
+  }
+  $scope.sorting=function(asc){
+    var desc = '-'+asc;
+    if(!$scope.addingmode){
+      var col = $scope.ordercol;
+      if(asc==col)
+        $scope.ordercol = desc;
+      else
+        $scope.ordercol = asc;  
+    } 
+  }
+
+  $scope.issort=function(col){
+    var type = $scope.ordercol;
+    if(type==col)
+        return true;
+    return false;
+  }
+
+});
+app.filter('slice', function() {
+    return function(arr, start, end) {
+      return (arr || []).slice(start, end);
+    };
+  });

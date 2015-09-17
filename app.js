@@ -37,15 +37,13 @@ app.get('/',function(req, res){
     res.sendFile(__dirname + '/views/index.html'); 
 
 });
+app.get('/fandata',function(req, res){ 
+    dbfunc.fandata(req,res);
+});
 app.post('/user',function(req, res){ 
-    var postdata = req.body;
-    console.log('postdata',postdata);
-    var post = req.body.post;
-    var eventtype = req.body.event;
-    var username = req.body.name;
-    var userid = req.body.id;
-    var time = req.body.time;
-    dbfunc.userevent(postdata);
+    var userdata = req.body;
+    console.log('userdata',userdata);
+    dbfunc.userevent(userdata);
     res.end();
 });
 
@@ -54,23 +52,17 @@ app.post('/transformdata',function(req, res){
     console.log('postid',postid.postid);
     dbfunc.setParent(postid.postid);
     dbfunc.addLike(postid.postid);
-    //dbfunc.userevent(postdata);
     res.end();
 });
 
 app.post('/friends',function(req, res){ 
     var frienddata = req.body;
+    dbfunc.friendlist(req.body);
     console.log('friend',frienddata);
-    dbfunc.friendlist(frienddata);
-    /*
-    console.log('postid',postid);
-    console.log('eventtype',eventtype);
-    console.log('name',username);
-    console.log('id',userid);
-    console.log('time',time);
-    */
-    //dbfunc.userevent(postdata);
     res.end();
+});
+app.post('/checkliked',function(req, res){ 
+    dbfunc.checkliked(req,res);
 });
 
 

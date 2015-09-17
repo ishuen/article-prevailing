@@ -1,0 +1,47 @@
+.panel.panel-inverse(ng-controller="fanCtrl")
+  .panel-heading
+    .panel-heading-btn
+    h4.panel-title Fans Rank
+  .panel-body
+    form.form-horizontal
+      .form-group
+        label.control-label.col-md-2 Show
+        .col-md-2
+          select.form-control.input-sm(ng-model="entry" ng-options="k as k for k in pageoption" ng-change="countpage()")
+        label.control-label entries
+      .form-group
+        label.control-label.col-md-2 Type 
+        .col-md-2
+          select.form-control.input-sm(ng-model="type" ng-options="k as k.title for k in options" ng-change="arrangedata(type.key)")
+    .col-md-12.divider
+    form.mytable-striped
+      .mytable-head.col-md-12
+        a.showpointer(href="javascript:;" ng-click="sorting('id')")
+          span.col-md-3 ID
+            i.rightbtn.fa.fa-fw.fa-sort(ng-class="{'sort':!issort('-id')&&!issort('id'),'fa-sort-asc':issort('-id'),'fa-sort-desc':issort('id')}")
+        a.showpointer(href="javascript:;" ng-click="sorting('name')")
+          span.col-md-3 Name
+            i.rightbtn.fa.fa-fw.fa-sort(ng-class="{'sort':!issort('-name')&&!issort('name'),'fa-sort-asc':issort('-name'),'fa-sort-desc':issort('name')}")
+        a.showpointer(href="javascript:;" ng-click="sorting('event')")
+          span.col-md-3 Action
+            i.rightbtn.fa.fa-fw.fa-sort(ng-class="{'sort':!issort('-event')&&!issort('event'),'fa-sort-asc':issort('-event'),'fa-sort-desc':issort('event')}")
+        a.showpointer(href="javascript:;" ng-click="sorting('-count')")
+          span.col-md-2 Count
+            i.rightbtn.fa.fa-fw.fa-sort(ng-class="{'sort':!issort('-count')&&!issort('count'),'fa-sort-asc':issort('-count'),'fa-sort-desc':issort('count')}")
+      .mytable-body.col-md-12(ng-repeat="item in fansdata | orderBy:ordercol|  slice:start:end")
+        span.col-md-3
+          span {{item.id}}
+        span.col-md-3
+          span {{item.name}}
+        span.col-md-3
+          span {{item.event}}
+        span.col-md-3
+          span {{item.count}}
+      .col-md-12.divider
+        ul.rightbtn.pagination
+          li(ng-class="{'disabled':curpage==0}")
+            a(href='javascript:;' ng-click="changepage(curpage-1,'pre')") «
+          li(ng-repeat="page in pagelist" ng-class="{'active':curpage==$index}")
+            a(href='javascript:;' ng-click="changepage($index,'page')") {{page+1}}
+          li(ng-class="{'disabled':curpage==pagelist.length-1}")
+            a(href='javascript:;' ng-click="changepage(curpage+1,'next')") »

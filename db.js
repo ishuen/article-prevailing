@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var express = require('express');
+var sync = require('sync');
 
 /*
 mongoose.connect(process.env.MONGOLAB_URI, function(err) {
@@ -45,13 +46,12 @@ var friendData = mongoose.model('friends', friendSchema);
 module.exports.userevent=function(data){
   console.log('inuserevent');
   console.log('data',data);
-  userData.find({'name':data.name, 'event':'login','post':data.post}, function (err, docs) {
+  userData.find({'name':data.name, 'event':data.event,'post':data.post}, function (err, docs) {
     console.log('docs',docs);
     if(docs.length==0){
       var myuser = new userData(data);
       myuser.save(function(err, usr) {
         if (err) return console.error(err);
-        //console.log(user);
       });
     }
   });
@@ -72,6 +72,25 @@ module.exports.friendlist=function(data){
       friendData.update({'id':data.id, 'name':data.name, 'friends':data.friends})
   });
   
+}
+module.exports.checkliked=function(req,res){
+  var id = req.body.id;
+  var post = req.body.post;
+  console.log('checklikedreq',req.body);
+  userData.find({'post':post, 'id':id, 'event':'like'},function (err, docs){
+    console.log('likedoc',docs);
+    if(docs.length>0)
+      res.send(true);
+    else
+      res.send(false);
+  });
+
+}
+module.exports.fandata=function(req,res){
+  userData.find({},function (err, docs){
+    console.log('fandocs',docs);
+    res.send(docs);
+  });
 }
 var userdatas = new mongoose.Schema({
     post:{type: Number},
