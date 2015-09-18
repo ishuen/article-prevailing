@@ -267,7 +267,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     '1':'First Post',
     '2':'Second Post'
   };
-  $scope.postid='1';
+  $scope.postid='2';
   function event(action) {
     if(action == "login")
       return "white";
@@ -324,7 +324,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var url = "https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
+  var drawurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
 
 
   function update(source) {
@@ -372,11 +372,28 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
 
   }
   var drawtopology=function(){
-    d3.json(url, function(error, data) {
-      turnFlat(data,treeData);
-      root = treeData[0];
-      update(root);
-    }).header("Content-Type", "application/json");
+    $http.get('https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko').
+      success(function(drawjson, status, headers, config) {
+        console.log('drawjson',drawjson);
+        var mydrawjson=[];
+        for(var i=0; i<drawjson.length;i++){
+          var entry = drawjson[i];
+          if(i==0){
+            var myroot={"name":"source"};
+            mydrawjson.push(myroot);
+          }
+          if(entry.post==parseInt($scope.postid))
+            mydrawjson.push(entry);
+        }
+        console.log('mydrawjson',mydrawjson);
+        turnFlat(mydrawjson,treeData);
+        root = treeData[0];
+        update(root);
+      }).
+      error(function(data, status, headers, config) {
+        console.log('error',status);
+      });
+    
   }
   $scope.transformdata=function(){
     var postid = {postid:parseInt($scope.postid)}
