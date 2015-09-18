@@ -267,7 +267,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     '1':'First Post',
     '2':'Second Post'
   };
-  $scope.postid='2';
+  $scope.postid='1';
   function event(action) {
     if(action == "login")
       return "white";
