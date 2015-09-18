@@ -61,10 +61,6 @@ app.post('/friends',function(req, res){
     console.log('friend',frienddata);
     res.end();
 });
-app.post('/checkliked',function(req, res){ 
-    dbfunc.checkliked(req,res);
-});
-
 
 server.listen(8005,'127.0.0.1',function(){
     console.log('HTTP伺服器在 http://127.0.0.1:8005/ 上運行');

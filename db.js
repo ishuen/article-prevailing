@@ -73,19 +73,7 @@ module.exports.friendlist=function(data){
   });
   
 }
-module.exports.checkliked=function(req,res){
-  var id = req.body.id;
-  var post = req.body.post;
-  console.log('checklikedreq',req.body);
-  userData.find({'post':post, 'id':id, 'event':'like'},function (err, docs){
-    console.log('likedoc',docs);
-    if(docs.length>0)
-      res.send(true);
-    else
-      res.send(false);
-  });
 
-}
 module.exports.fandata=function(req,res){
   userData.find({},function (err, docs){
     console.log('fandocs',docs);

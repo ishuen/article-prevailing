@@ -88,6 +88,9 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     "id": "",
     "time": "" 
   };
+  $scope.ifiammanager=false;
+  var userdataurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/users?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
+  var manager=["10203540396229014"];
   for(var i = 0; i<menu.length;i++)
     menu[i].open=false;
   
@@ -124,6 +127,12 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     if(mymenu.key!='admin')
       $scope.checkLogin('login');
   }
+  var checkmanager=function(userid){
+    if(manager.indexOf(userid)>=0)
+      $scope.ifiammanager=true;
+    else
+      $scope.ifiammanager=false;
+  }
   $scope.login=function(){
     var event_type="login";
     console.log('login');
@@ -138,6 +147,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
         userdata.time = new Date().getTime();
         userdata.event=event_type;
         userdata.post=postid;
+        checkmanager(userdata.id);
         console.log('Name:' + userdata.name + userdata.event);
         console.log('ID:' + userdata.id + '.');
         console.log('Postid:', userdata.post); 
@@ -240,9 +250,17 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   }; 
   $scope.checkliked=function(user){
     console.log('checklikeduser',user);
-    $http.post('/checkliked',user).
+    
+    $http.get(userdataurl).
       success(function(data, status, headers, config) {
-        $scope.liked=data;
+        for(var i=0; i<data.length;i++){
+          if(data[i].post==user.post && data[i].id==user.id && data[i].event=="like"){
+            $scope.liked=true;
+            return;
+          }
+        }
+        $scope.liked=false;
+        //$scope.liked=data;
         console.log('liked',$scope.liked);
       }).
       error(function(data, status, headers, config) {
@@ -258,6 +276,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   $scope.logged=function(){
     $scope.notlog=false;
   }
+
 
   //$scope.login();
 
