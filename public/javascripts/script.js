@@ -90,7 +90,7 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
   };
   $scope.ifiammanager=false;
   var userdataurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/users?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
-  var manager=["10203540396229014"];
+  var manager=["10203540396229014","100001442165775","100000756017779"];
   for(var i = 0; i<menu.length;i++)
     menu[i].open=false;
   
