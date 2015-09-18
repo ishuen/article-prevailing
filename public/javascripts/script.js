@@ -264,8 +264,8 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
 });
 app.controller('topologyCtrl', function ($scope, $http, $window) {
   $scope.options={
-    1:'First Post',
-    2:'Second Post'
+    '1':'First Post',
+    '2':'Second Post'
   };
   $scope.postid='1';
   function event(action) {

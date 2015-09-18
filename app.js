@@ -51,7 +51,7 @@ app.post('/transformdata',function(req, res){
     var postid = req.body;
     console.log('postid',postid.postid);
     dbfunc.setParent(postid.postid);
-    dbfunc.addLike(postid.postid);
+    setTimeout(dbfunc.addLike(postid.postid), 5000);
     res.end();
 });
 
