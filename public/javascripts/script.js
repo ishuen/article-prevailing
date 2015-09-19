@@ -79,6 +79,9 @@ app.config(function($stateProvider, $urlRouterProvider,$controllerProvider) {
   }
 
 });
+var userdataurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/users?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
+var manager=["10203540396229014","100001442165775","100000756017779"];
+var drawurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
 app.controller('graphuiCtrl', function ($scope, $http, $window) {
   var user={};
   var userdata={
@@ -89,8 +92,6 @@ app.controller('graphuiCtrl', function ($scope, $http, $window) {
     "time": "" 
   };
   $scope.ifiammanager=false;
-  var userdataurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/users?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
-  var manager=["10203540396229014","100001442165775","100000756017779"];
   for(var i = 0; i<menu.length;i++)
     menu[i].open=false;
   
@@ -343,7 +344,6 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var drawurl = "https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko";
 
 
   function update(source) {
@@ -391,7 +391,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
 
   }
   var drawtopology=function(){
-    $http.get('https://api.mongolab.com/api/1/databases/improject_database/collections/t1?apiKey=ewLJMRQEiyD4sjOletIG_jOF_ps2V5Ko').
+    $http.get(drawurl).
       success(function(drawjson, status, headers, config) {
         console.log('drawjson',drawjson);
         var mydrawjson=[];
@@ -401,8 +401,12 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
             var myroot={"name":"source"};
             mydrawjson.push(myroot);
           }
-          if(entry.post==parseInt($scope.postid))
+          if(entry.post==parseInt($scope.postid)){
+            delete entry.id;
+            delete entry._id;
+            delete entry.__v;
             mydrawjson.push(entry);
+          }
         }
         console.log('mydrawjson',mydrawjson);
         turnFlat(mydrawjson,treeData);
@@ -442,7 +446,7 @@ app.controller('fanCtrl', function ($scope, $http, $window) {
   $scope.type=$scope.options[1];
   $scope.pagelist=[];
   $scope.entry=10;
-  $http.get('/fandata').
+  $http.get(userdataurl).
     success(function(data, status, headers, config) {
       $scope.fansdata=angular.copy(data);
       origindata=angular.copy(data);

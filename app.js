@@ -37,9 +37,7 @@ app.get('/',function(req, res){
     res.sendFile(__dirname + '/views/index.html'); 
 
 });
-app.get('/fandata',function(req, res){ 
-    dbfunc.fandata(req,res);
-});
+
 app.post('/user',function(req, res){ 
     var userdata = req.body;
     console.log('userdata',userdata);

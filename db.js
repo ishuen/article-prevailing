@@ -74,12 +74,6 @@ module.exports.friendlist=function(data){
   
 }
 
-module.exports.fandata=function(req,res){
-  userData.find({},function (err, docs){
-    console.log('fandocs',docs);
-    res.send(docs);
-  });
-}
 var userdatas = new mongoose.Schema({
     post:{type: Number},
     event:{type: String},
