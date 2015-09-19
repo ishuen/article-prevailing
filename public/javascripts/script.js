@@ -289,11 +289,11 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
   };
   $scope.postid='1';
   function event(action) {
-    if(action == "login")
+    if(action == "0")
       return "white";
-    else if(action == "like") 
+    else if(action == "1") 
       return "steelblue";
-    else if(action == "share")
+    else if(action == "2")
       return "seagreen";
     else
       return "black";
@@ -328,7 +328,7 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
   // ************** Generate the tree diagram  *****************
   var margin = {top: 20, right: 120, bottom: 20, left: 120},
     width = 960 - margin.right - margin.left,
-    height = 500 - margin.top - margin.bottom;
+    height = 2000 - margin.top - margin.bottom;
     
   var i = 0;
 
@@ -343,9 +343,6 @@ app.controller('topologyCtrl', function ($scope, $http, $window) {
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-
   function update(source) {
 
     // Compute the new tree layout.
