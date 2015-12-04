@@ -88,7 +88,7 @@ function findFriend(temp, login, share){
 						}
 					}
 					if(ref[0] != undefined){
-						for(var i = 0; i < last; i++){
+						for(var i = 0; i <= last; i++){
 							for(var j = 0; j < ref.length; j++){
 								if(login[i].id == ref[j].id){
 									par = ref[j].name;
