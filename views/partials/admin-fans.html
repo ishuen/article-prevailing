@@ -1,0 +1,36 @@
+
+<div ng-controller="fanCtrl" class="panel panel-inverse">
+  <div class="panel-heading">
+    <div class="panel-heading-btn"></div>
+    <h4 class="panel-title">Fans Rank</h4>
+  </div>
+  <div class="panel-body">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <label class="control-label col-md-2">Show</label>
+        <div class="col-md-2">
+          <select ng-model="entry" ng-options="k as k for k in pageoption" ng-change="countpage()" class="form-control input-sm"></select>
+        </div>
+        <label class="control-label">entries</label>
+      </div>
+      <div class="form-group">
+        <label class="control-label col-md-2">Type </label>
+        <div class="col-md-2">
+          <select ng-model="type" ng-options="k as k.title for k in options" ng-change="arrangedata(type.key)" class="form-control input-sm"></select>
+        </div>
+      </div>
+    </form>
+    <div class="col-md-12 divider"></div>
+    <form class="mytable-striped">
+      <div class="mytable-head col-md-12"><a href="javascript:;" ng-click="sorting('id')" class="showpointer"><span class="col-md-3">ID<i ng-class="{'sort':!issort('-id')&amp;&amp;!issort('id'),'fa-sort-asc':issort('-id'),'fa-sort-desc':issort('id')}" class="rightbtn fa fa-fw fa-sort"></i></span></a><a href="javascript:;" ng-click="sorting('name')" class="showpointer"><span class="col-md-3">Name<i ng-class="{'sort':!issort('-name')&amp;&amp;!issort('name'),'fa-sort-asc':issort('-name'),'fa-sort-desc':issort('name')}" class="rightbtn fa fa-fw fa-sort"></i></span></a><a href="javascript:;" ng-click="sorting('event')" class="showpointer"><span class="col-md-3">Action<i ng-class="{'sort':!issort('-event')&amp;&amp;!issort('event'),'fa-sort-asc':issort('-event'),'fa-sort-desc':issort('event')}" class="rightbtn fa fa-fw fa-sort"></i></span></a><a href="javascript:;" ng-click="sorting('-count')" class="showpointer"><span class="col-md-2">Count<i ng-class="{'sort':!issort('-count')&amp;&amp;!issort('count'),'fa-sort-asc':issort('-count'),'fa-sort-desc':issort('count')}" class="rightbtn fa fa-fw fa-sort"></i></span></a></div>
+      <div ng-repeat="item in fansdata | orderBy:ordercol|  slice:start:end" class="mytable-body col-md-12"><span class="col-md-3"><span>{{item.id}}</span></span><span class="col-md-3"><span>{{item.name}}</span></span><span class="col-md-3"><span>{{item.event}}</span></span><span class="col-md-3"><span>{{item.count}}</span></span></div>
+      <div class="col-md-12 divider">
+        <ul class="rightbtn pagination">
+          <li ng-class="{'disabled':curpage==0}"><a href="javascript:;" ng-click="changepage(curpage-1,'pre')">«</a></li>
+          <li ng-repeat="page in pagelist" ng-class="{'active':curpage==$index}"><a href="javascript:;" ng-click="changepage($index,'page')">{{page+1}}</a></li>
+          <li ng-class="{'disabled':curpage==pagelist.length-1}"><a href="javascript:;" ng-click="changepage(curpage+1,'next')">»</a></li>
+        </ul>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+
+<div ng-controller="topologyCtrl" class="panel panel-inverse">
+  <div class="panel-heading">
+    <div class="panel-heading-btn"></div>
+    <h4 class="panel-title">Topology</h4>
+  </div>
+  <div class="panel-body">
+    <form name="form" class="form-horizontal">
+      <div class="form-group">
+        <label class="col-md-3 control-label">Choose An atricle</label>
+        <div class="col-md-5">
+          <select ng-model="postid" ng-options="k as v for (k,v) in options" ng-change="transformdata()" class="form-control input-sm"></select>
+        </div>
+      </div>
+      <div id="topology" class="form-group"></div>
+    </form>
+  </div>
+</div>
