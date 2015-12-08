@@ -113,7 +113,7 @@ var findFriend=function(temp, login, share){
             }
           }
           if(ref[0] != undefined){
-            for(var i = last; i >= 0; i--){
+            for(var i = 0; i <= last; i++){
               for(var j = 0; j < ref.length; j++){
                 if(login[i].id == ref[j].id){
                   par = ref[j].name;
@@ -129,19 +129,7 @@ var findFriend=function(temp, login, share){
             }
           }
         }
-        //console.log(temp);
-        /*var t = new t1(temp);
-        t.save( function(err, data){
-        if (err) return handleError(err);
-        });*/
       }
-      /*else{
-        console.log(temp);
-        var t = new t1(temp);
-        t.save( function(err, data){
-        if (err) return handleError(err);
-        });
-      }*/
       console.log(temp);
       var t = new t1(temp);
       t.save( function(err, data){
