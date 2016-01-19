@@ -48,9 +48,8 @@ app.post('/user',function(req, res){
 app.post('/transformdata',function(req, res){ 
     var postid = req.body;
     console.log('postid',postid.postid);
-    dbfunc.setParent(postid.postid);
-    //setTimeout(dbfunc.addLike(postid.postid), 5000);
-    res.end();
+    dbfunc.setNode(postid.postid,res);
+   
 });
 
 app.post('/friends',function(req, res){ 
@@ -60,10 +59,9 @@ app.post('/friends',function(req, res){
     res.end();
 });
 
-server.listen(8005,'127.0.0.1',function(){
-    console.log('HTTP伺服器在 http://127.0.0.1:8005/ 上運行');
-});
+//server.listen(8005,'127.0.0.1',function(){console.log('HTTP伺服器在 http://127.0.0.1:8005/ 上運行');});
 
+server.listen(process.env.PORT || 5000);
 process.on('SIGINT', function() {
 console.log('server close');
   server.close();
