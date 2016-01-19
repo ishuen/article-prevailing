@@ -55,6 +55,8 @@ var t1 = mongoose.model('t1', temp1);
 
 
 module.exports.userevent=function(data){
+  if(data.post==null)
+    return;
   userData.find({'name':data.name, 'event':data.event,'post':data.post}, function (err, docs) {
     if(docs.length==0){
       var myuser = new userData(data);
@@ -84,95 +86,6 @@ module.exports.friendlist=function(data){
 用法：
 setNode(postnum);
 */
-var findFriend=function(temp, login, share){
-  var query = friend.find({'id':temp.id});
-  query.lean().exec(function(err,docs){
-    if(err) return handleError(err);
-    else{
-      if(docs[0] != undefined && docs[0]!= ' '){
-        var frd = new Array();
-        var par;
-        var boo = 0;
-        frd = docs[0].friends.slice();
-        var last = login.length - 1;
-        for(var i = last; i>=0; i--){
-          if(login[i].id == temp.id){
-            last = i;
-            break;
-          }
-        }
-        if(last > 0){
-          last--;
-          var ref = new Array();
-          while(frd[0] != undefined){
-            var tmp = frd.pop();
-            for(var i = 0; i < share.length; i++){
-              if(tmp.id == share[i].id){
-                ref.unshift(tmp);
-              }
-            }
-          }
-          if(ref[0] != undefined){
-            for(var i = last; i >= 0; i--){
-              for(var j = 0; j < ref.length; j++){
-                if(login[i].id == ref[j].id){
-                  par = ref[j].name;
-                  boo = 1;
-                  break;
-                }
-              }
-              if(boo == 1)
-                break;
-            }
-            if(par != undefined){
-              temp.parent = par;
-            }
-          }
-        }
-        //console.log(temp);
-        /*var t = new t1(temp);
-        t.save( function(err, data){
-        if (err) return handleError(err);
-        });*/
-      }
-      /*else{
-        console.log(temp);
-        var t = new t1(temp);
-        t.save( function(err, data){
-        if (err) return handleError(err);
-        });
-      }*/
-      console.log(temp);
-      var t = new t1(temp);
-      t.save( function(err, data){
-      if (err) return handleError(err);
-      });
-    }
-  })
-}
-var checkAndDel=function(id, arr){
-  if(arr.length == 1){
-    if(id == arr[0].id)
-      arr.pop();
-  }
-  else if(arr.length > 1){
-    for(var i = 0; i < arr.length; i++){
-      if(i == 0 && id == arr[i].id){
-        arr.shift();
-        return arr;
-      }
-      else if(i != 0 && id == arr[i].id){
-        for(var j = i; j > 0; j--){
-          arr[j] = arr[j - 1];
-        }
-        arr.shift();
-        return arr;
-      }
-    }
-    return arr;
-  }
-  return arr;
-}
 module.exports.setNode=function(postnum,res){
   var query = t1.remove({}, function (err,docs) {
     if (err) return handleError(err);
@@ -230,5 +143,93 @@ module.exports.setNode=function(postnum,res){
   })
   res.end();
 }
-
+function findFriend(temp, login, share){
+  var query = friend.find({'id':temp.id});
+  query.lean().exec(function(err,docs){
+    if(err) return handleError(err);
+    else{
+      if(docs[0] != undefined && docs[0]!= ' '){
+        var frd = new Array();
+        var par;
+        var boo = 0;
+        frd = docs[0].friends.slice();
+        var last = login.length - 1;
+        for(var i = last; i>=0; i--){
+          if(login[i].id == temp.id){
+            last = i;
+            break;
+          }
+        }
+        if(last > 0){
+          last--;
+          var ref = new Array();
+          while(frd[0] != undefined){
+            var tmp = frd.pop();
+            for(var i = 0; i < share.length; i++){
+              if(tmp.id == share[i].id){
+                ref.unshift(tmp);
+              }
+            }
+          }
+          if(ref[0] != undefined){
+            for(var i = 0; i <= last; i++){
+              for(var j = 0; j < ref.length; j++){
+                if(login[i].id == ref[j].id){
+                  par = ref[j].name;
+                  boo = 1;
+                  break;
+                }
+              }
+              if(boo == 1)
+                break;
+            }
+            if(par != undefined){
+              temp.parent = par;
+            }
+          }
+        }
+        //console.log(temp);
+        /*var t = new t1(temp);
+        t.save( function(err, data){
+        if (err) return handleError(err);
+        });*/
+      }
+      /*else{
+        console.log(temp);
+        var t = new t1(temp);
+        t.save( function(err, data){
+        if (err) return handleError(err);
+        });
+      }*/
+      console.log(temp);
+      var t = new t1(temp);
+      t.save( function(err, data){
+      if (err) return handleError(err);
+      });
+    }
+  })
+}
+function checkAndDel(id, arr){
+  if(arr.length == 1){
+    if(id == arr[0].id)
+      arr.pop();
+  }
+  else if(arr.length > 1){
+    for(var i = 0; i < arr.length; i++){
+      if(i == 0 && id == arr[i].id){
+        arr.shift();
+        return arr;
+      }
+      else if(i != 0 && id == arr[i].id){
+        for(var j = i; j > 0; j--){
+          arr[j] = arr[j - 1];
+        }
+        arr.shift();
+        return arr;
+      }
+    }
+    return arr;
+  }
+  return arr;
+}
 
