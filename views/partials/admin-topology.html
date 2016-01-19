@@ -1,4 +1,5 @@
 
+<h1 class="page-header">Administration</h1>
 <div ng-controller="topologyCtrl" class="panel panel-inverse">
   <div class="panel-heading">
     <div class="panel-heading-btn"></div>
@@ -8,11 +9,22 @@
     <form name="form" class="form-horizontal">
       <div class="form-group">
         <label class="col-md-3 control-label">Choose An atricle</label>
-        <div class="col-md-5">
+        <div class="col-md-6">
           <select ng-model="postid" ng-options="k as v for (k,v) in options" ng-change="transformdata()" class="form-control input-sm"></select>
         </div>
       </div>
       <div id="topology" class="form-group"></div>
+      <div class="form-group">
+        <div class="col-md-2 col-md-offset-10">
+          <ul>
+            <li class="source">Source</li>
+            <li class="login_">Login</li>
+            <li class="like">Like</li>
+            <li class="share">Share</li>
+            <li class="like_share">Like and Share</li>
+          </ul>
+        </div>
+      </div>
     </form>
   </div>
 </div>
